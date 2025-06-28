@@ -1,0 +1,57 @@
+{
+  "word_order": "SOV (Subject-Object-Verb)",
+  "alphabet": {
+    "A": "/a/ 'ah' as in father",
+    "B": "/b/ 'b' as in bat",
+    "D": "/d/ 'd' as in dog",
+    "E": "/ɛ/ 'eh' as in red",
+    "F": "/f/ 'f' as in fish",
+    "G": "/g/ hard 'g' as in go",
+    "H": "/h/ 'h' as in hat",
+    "I": "/aɪ/ 'eye' as in light",
+    "J": "/ʃ/ 'sh' as in ship",
+    "L": "/l/ 'l' as in love",
+    "M": "/m/ 'm' as in man",
+    "N": "/n/ 'n' as in no",
+    "O": "/oʊ/ 'oh' as in go",
+    "P": "/p/ 'p' as in pen",
+    "R": "/r/ trilled 'r'",
+    "S": "/s/ 's' as in sun",
+    "T": "/t/ 't' as in top",
+    "U": "/u/ 'oo' as in flute",
+    "V": "/v/ 'v' as in van",
+    "W": "/w/ 'w' as in water",
+    "X": "/ks/ 'ks' as in box",
+    "Y": "/j/ 'y' as in yes"
+  },
+  "articles": {
+    "definite": "na (before noun)",
+    "indefinite": "none (implied by context)"
+  },
+  "plurals": {
+    "suffix_1": "-in",
+    "suffix_2": "-eth",
+    "rule": "depends on euphony"
+  },
+  "pronouns": {
+    "I": "sa",
+    "you": "tu",
+    "he/she": "le",
+    "we": "san",
+    "they": "len",
+    "it": "en"
+  },
+  "verb_conjugation": {
+    "present": "base form",
+    "past": "add -et",
+    "future": "add ur- prefix",
+    "negative": "add 'no' before verb"
+  },
+  "adjectives": "come after nouns, no inflection",
+  "stress": "penultimate syllable unless marked",
+  "cultural_notes": {
+    "naming": "musical, often ending in vowels or soft consonants",
+    "poetry": "sacred - syntax often bent in poetic/prophetic speech",
+    "imagery": "gold, mist, and echoes are core motifs"
+  }
+}

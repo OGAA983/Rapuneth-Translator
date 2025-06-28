@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪶 Rapuneth Translator 🪶</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a1a1a 0%,#2d3748 100%);color:#f0f0f0;min-height:100vh;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{text-align:center;margin-bottom:30px;background:rgba(74,111,165,0.1);padding:20px;border-radius:15px;backdrop-filter:blur(10px)}
+.header h1{font-size:2.5em;color:#4fc3f7;margin-bottom:10px;text-shadow:0 0 20px rgba(79,195,247,0.3)}
+.header p{font-style:italic;color:#b0b0b0;font-size:1.1em}
+.tabs{display:flex;margin-bottom:20px;background:rgba(22,96,136,0.2);border-radius:10px;padding:5px;overflow-x:auto}
+.tab-button{background:transparent;border:none;color:#f0f0f0;padding:15px 20px;cursor:pointer;border-radius:8px;transition:all 0.3s ease;font-size:14px;font-weight:500;white-space:nowrap}
+.tab-button:hover{background:rgba(74,111,165,0.3);transform:translateY(-2px)}
+.tab-button.active{background:linear-gradient(135deg,#4a6fa5,#166088);box-shadow:0 4px 15px rgba(74,111,165,0.3)}
+.tab-content{display:none;background:rgba(51,51,51,0.8);border-radius:15px;padding:25px;backdrop-filter:blur(10px);border:1px solid rgba(79,195,247,0.1)}
+.tab-content.active{display:block;animation:fadeIn 0.3s ease-in}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;color:#4fc3f7;font-weight:600}
+.radio-group{display:flex;gap:20px;margin-bottom:20px}
+.radio-group label{display:flex;align-items:center;gap:8px;cursor:pointer;color:#f0f0f0;font-weight:normal}
+.radio-group input[type="radio"]{accent-color:#4fc3f7}
+textarea,input[type="text"]{width:100%;background:rgba(26,26,26,0.8);border:2px solid rgba(79,195,247,0.2);border-radius:10px;padding:15px;color:#f0f0f0;font-size:14px;resize:vertical;transition:border-color 0.3s ease,box-shadow 0.3s ease}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:#4fc3f7;box-shadow:0 0 20px rgba(79,195,247,0.2)}
+.textarea-large{min-height:150px}
+.rapuneth-font{font-family:'Arial Unicode MS','Segoe UI Symbol',sans-serif;font-size:16px;color:#4fc3f7}
+.button-group{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
+.btn{background:linear-gradient(135deg,#4a6fa5,#166088);color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.3s ease;position:relative;overflow:hidden}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(74,111,165,0.3)}
+.btn:active{transform:translateY(0)}
+.btn-secondary{background:linear-gradient(135deg,#ff7043,#d84315)}
+.btn-success{background:linear-gradient(135deg,#66bb6a,#388e3c)}
+.dictionary-section{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:20px}
+.dictionary-table{width:100%;border-collapse:collapse;margin-top:20px;background:rgba(26,26,26,0.8);border-radius:10px;overflow:hidden}
+.dictionary-table th,.dictionary-table td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(79,195,247,0.1)}
+.dictionary-table th{background:linear-gradient(135deg,#166088,#4a6fa5);color:white;font-weight:600}
+.dictionary-table tr:hover{background:rgba(79,195,247,0.1)}
+.dictionary-table tr.selected{background:rgba(79,195,247,0.2)}
+.rules-content{background:rgba(26,26,26,0.8);padding:20px;border-radius:10px;max-height:600px;overflow-y:auto}
+.rules-title{color:#4fc3f7;font-size:1.5em;font-weight:bold;margin-bottom:15px}
+.rules-heading{color:#ff7043;font-size:1.2em;font-weight:bold;margin:20px 0 10px 0}
+.rules-example{color:#a5d6a7;font-family:'Courier New',monospace;font-size:0.9em;margin:5px 0}
+.status-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(26,26,26,0.95);padding:10px 20px;border-top:1px solid rgba(79,195,247,0.2);backdrop-filter:blur(10px)}
+.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);backdrop-filter:blur(5px)}
+.modal-content{background:linear-gradient(135deg,#1a1a1a,#2d3748);margin:5% auto;padding:30px;border:1px solid rgba(79,195,247,0.3);border-radius:15px;width:90%;max-width:600px;max-height:80vh;overflow-y:auto}
+.close{color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer;line-height:1}
+.close:hover{color:#4fc3f7}
+.search-input{width:100%;margin-bottom:15px}
+@media (max-width:768px){.container{padding:10px}.header h1{font-size:2em}.dictionary-section{grid-template-columns:1fr;gap:10px}.button-group{justify-content:center}.tabs{flex-direction:column}.tab-button{width:100%;text-align:center}}
+</style>
+
+
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#4fc3f7" />
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪶 RAPUNETH TRANSLATOR 🪶</h1>
+            <p>Translate between English and the mystical Rapuneth language</p>
+        </div>
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event,'translate-tab')">🔤 Translate</button>
+            <button class="tab-button" onclick="openTab(event,'font-tab')">✍️ Rapuneth Font</button>
+            <button class="tab-button" onclick="openTab(event,'dictionary-tab')">📚 Dictionary</button>
+            <button class="tab-button" onclick="openTab(event,'rules-tab')">📜 Grammar Rules</button>
+        </div>
+        <div id="translate-tab" class="tab-content active">
+            <div class="form-group">
+                <label>Translation Direction:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="direction" value="rapuneth_to_english" checked>Rapuneth → English</label>
+                    <label><input type="radio" name="direction" value="english_to_rapuneth">English → Rapuneth</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>📝 Input Text:</label>
+<textarea id="input-text" class="textarea-large" placeholder="Enter text to translate..."></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="translateText()">✨ Translate</button>
+                <button class="btn btn-secondary" onclick="clearText()">🧹 Clear</button>
+                <button class="btn" onclick="showBreakdown()">🔍 Word Breakdown</button>
+                <button class="btn" onclick="showConjugation()">⚡ Conjugate Verb</button>
+            </div>
+            <div class="form-group">
+                <label>🌍 Translation:</label>
+<textarea id="output-text" class="textarea-large" readonly></textarea>
+            </div>
+        </div>
+        <div id="font-tab" class="tab-content">
+            <div class="form-group">
+                <label>ℹ️ Instructions:</label>
+                <p style="background:rgba(79,195,247,0.1);padding:15px;border-radius:8px;margin-bottom:20px;">Type in Latin characters below and see them converted to Rapuneth script. This uses the custom character mapping for the Rapuneth writing system.</p>
+            </div>
+            <div class="form-group">
+                <label>⌨️ Latin Text Input:</label>
+<textarea id="font-input" class="textarea-large" placeholder="Type here..." oninput="convertFontRealtime()"></textarea>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="clearFontInput()">🧹 Clear Font Input</button>
+                <button class="btn btn-success" onclick="copyRapunethText()">📋 Copy Rapuneth Text</button>
+            </div>
+            <div class="form-group">
+                <label>🖋️ Rapuneth Script Output:</label>
+<textarea id="font-output" class="textarea-large rapuneth-font" readonly></textarea>
+            </div>
+        </div>
+        <div id="dictionary-tab" class="tab-content">
+            <div class="form-group">
+                <label>➕ Add New Translation:</label>
+                <div class="dictionary-section">
+                    <input type="text" id="rapuneth-input" placeholder="Rapuneth word...">
+                    <input type="text" id="english-input" placeholder="English translation...">
+                    <button class="btn btn-success" onclick="addTranslation()">💾 Add</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>🔍 Search Dictionary:</label>
+                <input type="text" id="search-input" class="search-input" placeholder="Search..." oninput="filterDictionary()">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="deleteSelected()">🗑️ Delete Selected</button>
+                <button class="btn" onclick="exportDictionary()">📤 Export Dictionary</button>
+                <button class="btn" onclick="importDictionary()">📥 Import Dictionary</button>
+            </div>
+            <table class="dictionary-table" id="dictionary-table">
+                <thead><tr><th>Rapuneth</th><th>English</th></tr></thead>
+                <tbody id="dictionary-tbody"></tbody>
+            </table>
+        </div>
+        <div id="rules-tab" class="tab-content">
+            <div class="rules-content" id="rules-content"></div>
+        </div>
+    </div>
+    <div id="breakdown-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('breakdown-modal')">&times;</span>
+            <h2 style="color:#4fc3f7;margin-bottom:20px;">🔍 Word-by-Word Breakdown</h2>
+            <div id="breakdown-content"></div>
+        </div>
+    </div>
+    <div id="conjugation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('conjugation-modal')">&times;</span>
+            <h2 style="color:#4fc3f7;margin-bottom:20px;">⚡ Verb Conjugator</h2>
+            <div class="form-group">
+                <label>Enter a Rapuneth verb:</label>
+                <input type="text" id="verb-input" placeholder="e.g., elut">
+            </div>
+            <button class="btn" onclick="conjugateVerb()">Conjugate</button>
+            <div id="conjugation-result" style="margin-top:20px;"></div>
+        </div>
+    </div>
+    <div class="status-bar">
+        <span id="status">Ready</span>
+    </div>
+    <script>
+        let translations={},selectedRow=null;
+        const fontMapping={'a':'Ть','b':'ЛЬ','d':'НЬ','e':'Ц','f':'Ա','g':'ք','h':'ո','i':'Տ','j':'ʒ','l':'Ʒ','m':'Ֆ','n':'Լ','o':'ʤ','p':'ի','r':'ին','s':'ւն','t':'u','u':'ב','v':'ϸ','w':'ⵡ','x':'Ɐ','y':'ⵢ','A':'ⴲ','B':'ⴸ','D':'ⵄ','E':'ⵁ','F':'ⴼ','G':'ⴶ','H':'ⵈ','I':'ⵉ','J':'ⵊ','L':'ⵍ','M':'ⵎ','N':'ⵏ','O':'ⵑ','P':'ⵒ','R':'ⵔ','S':'ⵚ','T':'ⴲ','U':'ⵓ','V':'ⴸ','W':'ⵡ','X':'☓','Y':'ⵢ'};
+        function initializeSampleVocabulary(){translations={"roven":"book","doma":"house","liran":"tall","selu":"blue","elut":"to read","kana":"to see","shira":"sky","minu":"water","jafa":"peace","rikan":"storm","sa":"I","tu":"you","le":"he/she","san":"we","len":"they","en":"it","na":"the","no":"not","ur":"will","rovenin":"books","domaeth":"houses","rikanin":"storms","aleth":"song","miran":"gold","shelara":"echo","vethil":"mist","kelen":"wisdom","thara":"light","nalu":"dream","firen":"fire","astral":"star","lumeth":"moon"}}
+        function setStatus(message){document.getElementById('status').textContent=message}
+        function openTab(evt,tabName){const tabcontent=document.getElementsByClassName("tab-content");for(let i=0;i<tabcontent.length;i++){tabcontent[i].classList.remove("active")}const tabbuttons=document.getElementsByClassName("tab-button");for(let i=0;i<tabbuttons.length;i++){tabbuttons[i].classList.remove("active")}document.getElementById(tabName).classList.add("active");evt.currentTarget.classList.add("active")}
+        function similarity(a,b){const longer=a.length>b.length?a:b;const shorter=a.length>b.length?b:a;const editDistance=levenshteinDistance(longer,shorter);return(longer.length-editDistance)/longer.length}
+        function levenshteinDistance(str1,str2){const matrix=[];for(let i=0;i<=str2.length;i++){matrix[i]=[i]}for(let j=0;j<=str1.length;j++){matrix[0][j]=j}for(let i=1;i<=str2.length;i++){for(let j=1;j<=str1.length;j++){if(str2.charAt(i-1)===str1.charAt(j-1)){matrix[i][j]=matrix[i-1][j-1]}else{matrix[i][j]=Math.min(matrix[i-1][j-1]+1,matrix[i][j-1]+1,matrix[i-1][j]+1)}}}return matrix[str2.length][str1.length]}
+        function findBestMatch(word,dictionary){let bestMatch=null;let bestScore=0;for(const key in dictionary){const score=similarity(word,key);if(score>bestScore){bestScore=score;bestMatch=key}}return{match:bestMatch,score:bestScore}}
+        function translateText(){const inputText=document.getElementById('input-text').value.trim();if(!inputText){setStatus("Please enter text to translate");return}setStatus("Translating...");const direction=document.querySelector('input[name="direction"]:checked').value;const words=inputText.toLowerCase().match(/\b\w+\b/g)||[];const translatedWords=[];const unknownWords=[];for(const word of words){let translation=null;if(direction==="rapuneth_to_english"){if(translations[word]){translation=translations[word]}else{const{match,score}=findBestMatch(word,translations);if(match&&score>0.7){translation=`${translations[match]} (?)`}else{unknownWords.push(word);translation=`[${word}]`}}}else{let rapunethWord=null;for(const[rWord,eWord]of Object.entries(translations)){if(word===eWord.toLowerCase()||eWord.toLowerCase().includes(word)){rapunethWord=rWord;break}}if(rapunethWord){translation=rapunethWord}else{let bestMatch=null;let bestScore=0;for(const[rWord,eWord]of Object.entries(translations)){const score=similarity(word,eWord);if(score>bestScore&&score>0.7){bestScore=score;bestMatch=rWord}}if(bestMatch){translation=`${bestMatch} (?)`}else{unknownWords.push(word);translation=`[${word}]`}}}translatedWords.push(translation)}let result=translatedWords.join(' ');if(unknownWords.length>0){result+=`\n\n⚠️ Unknown words: ${unknownWords.join(', ')}`}document.getElementById('output-text').value=result;setStatus("Translation complete")}
+        function clearText(){document.getElementById('input-text').value='';document.getElementById('output-text').value='';setStatus("Text cleared")}
+        function showBreakdown(){const inputText=document.getElementById('input-text').value.trim();if(!inputText){alert("Please enter text to analyze");return}const direction=document.querySelector('input[name="direction"]:checked').value;const words=inputText.toLowerCase().match(/\b\w+\b/g)||[];let breakdown=`Analysis for: '${inputText}'\nDirection: ${direction.replace('_',' → ').replace(/\b\w/g,l=>l.toUpperCase())}\n${"=".repeat(50)}\n\n`;words.forEach((word,i)=>{breakdown+=`${i+1}. '${word}'\n`;if(direction==="rapuneth_to_english"){if(translations[word]){breakdown+=`   Translation: ${translations[word]}\n   Confidence: Exact match\n`}else{const{match,score}=findBestMatch(word,translations);if(match&&score>0.7){breakdown+=`   Best match: ${match} → ${translations[match]}\n   Confidence: ${(score*100).toFixed(0)}%\n`}else{breakdown+=`   Translation: Unknown word\n   Confidence: 0%\n`}}}else{let found=false;for(const[rWord,eWord]of Object.entries(translations)){if(word===eWord.toLowerCase()){breakdown+=`   Translation: ${rWord}\n   Confidence: Exact match\n`;found=true;break}}if(!found){breakdown+=`   Translation: Unknown word\n   Confidence: 0%\n`}}breakdown+="\n"});document.getElementById('breakdown-content').innerHTML=`<pre style="white-space:pre-wrap;color:#f0f0f0;">${breakdown}</pre>`;document.getElementById('breakdown-modal').style.display='block'}
+        function showConjugation(){document.getElementById('conjugation-modal').style.display='block'}
+        function conjugateVerb(){const verb=document.getElementById('verb-input').value.trim();if(!verb){alert("Please enter a verb");return}let conjugations=`Conjugations for '${verb}':\n\nPresent: ${verb}\nPast: ${verb}et\nFuture: ur${verb}\n\nNegative Present: no ${verb}\nNegative Past: no ${verb}et\nNegative Future: no ur${verb}\n\nExamples:\nsa ${verb} = I ${verb}\ntu ${verb}et = you ${verb}ed\nle ur${verb} = he/she will ${verb}\n`;document.getElementById('conjugation-result').innerHTML=`<pre style="white-space:pre-wrap;color:#f0f0f0;">${conjugations}</pre>`}
+        function closeModal(modalId){document.getElementById(modalId).style.display='none'}
+        function convertToRapunethFont(text){let result="";for(const char of text){result+=fontMapping[char]||char}return result}
+        function convertFontRealtime(){const inputText=document.getElementById('font-input').value;const convertedText=convertToRapunethFont(inputText);document.getElementById('font-output').value=convertedText}
+        function clearFontInput(){document.getElementById('font-input').value='';document.getElementById('font-output').value=''}
+        function copyRapunethText(){const rapunethText=document.getElementById('font-output').value;if(rapunethText){navigator.clipboard.writeText(rapunethText).then(()=>{alert("Rapuneth text copied to clipboard!")}).catch(()=>{alert("Failed to copy text to clipboard")})}else{alert("No Rapuneth text to copy")}}
+        function addTranslation(){const rapuneth=document.getElementById('rapuneth-input').value.trim().toLowerCase();const english=document.getElementById('english-input').value.trim().toLowerCase();if(!rapuneth||!english){alert("Please enter both Rapuneth and English words");return}translations[rapuneth]=english;populateDictionary();document.getElementById('rapuneth-input').value='';document.getElementById('english-input').value='';setStatus(`Added translation: ${rapuneth} → ${english}`)}
+        function populateDictionary(){const tbody=document.getElementById('dictionary-tbody');tbody.innerHTML='';const searchTerm=document.getElementById('search-input').value.toLowerCase();for(const[rapuneth,english]of Object.entries(translations)){if(!searchTerm||rapuneth.includes(searchTerm)||english.includes(searchTerm)){const row=tbody.insertRow();row.onclick=()=>selectRow(row);row.innerHTML=`<td>${rapuneth}</td><td>${english}</td>`}}}
+        function selectRow(row){if(selectedRow){selectedRow.classList.remove('selected')}selectedRow=row;row.classList.add('selected')}
+        function deleteSelected(){if(!selectedRow){alert("Please select a row to delete");return}const rapuneth=selectedRow.cells[0].textContent;delete translations[rapuneth];populateDictionary();selectedRow=null;setStatus("Translation deleted")}
+        function filterDictionary(){populateDictionary()}
+        function exportDictionary(){const dataStr="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(translations));const downloadAnchorNode=document.createElement('a');downloadAnchorNode.setAttribute("href",dataStr);downloadAnchorNode.setAttribute("download","rapuneth_dictionary.json");document.body.appendChild(downloadAnchorNode);downloadAnchorNode.click();downloadAnchorNode.remove()}
+        function importDictionary(){const input=document.createElement('input');input.type='file';input.accept='.json';input.onchange=e=>{const file=e.target.files[0];const reader=new FileReader();reader.onload=e=>{try{const imported=JSON.parse(e.target.result);translations={...translations,...imported};populateDictionary();setStatus("Dictionary imported successfully")}catch(err){alert("Error importing dictionary")}};reader.readAsText(file)};input.click()}
+        function loadRules(){document.getElementById('rules-content').innerHTML=`<div class="rules-title">Rapuneth Grammar Rules</div><div class="rules-heading">1. Word Order</div><p>Basic sentence structure follows SOV (Subject-Object-Verb) order.</p><div class="rules-example">sa roven elut = I book read (I read a book)</div><div class="rules-heading">2. Articles</div><p>The definite article "na" precedes nouns.</p><div class="rules-example">na roven = the book</div><div class="rules-heading">3. Pluralization</div><p>Add "-in" for regular plurals, "-eth" for certain nouns.</p><div class="rules-example">roven → rovenin (books)<br>doma → domaeth (houses)</div><div class="rules-heading">4. Verb Conjugation</div><p>Present: base form<br>Past: add "-et"<br>Future: prefix "ur-"</p><div class="rules-example">elut (read) → elutet (read-past) → urelut (will read)</div><div class="rules-heading">5. Negation</div><p>Use "no" before the verb.</p><div class="rules-example">sa no elut = I don't read</div><div class="rules-heading">6. Pronouns</div><p>sa (I), tu (you), le (he/she), san (we), len (they), en (it)</p><div class="rules-heading">7. Adjectives</div><p>Adjectives follow nouns they modify.</p><div class="rules-example">roven liran = book tall (tall book)</div><div class="rules-heading">8. Questions</div><p>Use rising intonation or question particles at sentence end.</p>`}
+        window.onclick=e=>{if(e.target.classList.contains('modal')){e.target.style.display='none'}};
+        initializeSampleVocabulary();
+        populateDictionary();
+        loadRules();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('Service Worker registered.', reg))
+        .catch(err => console.log('Service Worker registration failed:', err));
+        });
+        }
+    </script>
+
+</body>
+</html>
