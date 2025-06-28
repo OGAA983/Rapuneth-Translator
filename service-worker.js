@@ -1,39 +1,13 @@
-const CACHE_NAME = "rapuneth-cache-v1";
-const urlsToCache = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
-  // You can add other assets like CSS, JS files here if you want
-];
-
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log("Opened cache");
-        return cache.addAll(urlsToCache);
-      })
-  );
+self.addEventListener('install', event => {
+  console.log('[ServiceWorker] Install');
+  self.skipWaiting();
 });
 
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
-      })
-  );
+self.addEventListener('activate', event => {
+  console.log('[ServiceWorker] Activate');
+  return self.clients.claim();
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.filter(name => name !== CACHE_NAME)
-                  .map(name => caches.delete(name))
-      );
-    })
-  );
+self.addEventListener('fetch', event => {
+  event.respondWith(fetch(event.request));
 });
