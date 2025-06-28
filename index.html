@@ -162,13 +162,11 @@ textarea:focus,input[type="text"]:focus{outline:none;border-color:#4fc3f7;box-sh
         <span id="status">Ready</span>
     </div>
     <script>
-        <script>
-            if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/rapuneth-translator/service-worker.js')
-            .then(reg => console.log('Service worker registered.', reg))
-            .catch(err => console.error('Service worker failed:', err));
+        if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/rapuneth-translator/service-worker.js')
+        .then(reg => console.log('Service worker registered.', reg))
+        .catch(err => console.error('Service worker failed:', err));
         }
-</script>
         let translations={},selectedRow=null;
         const fontMapping={'a':'Ть','b':'ЛЬ','d':'НЬ','e':'Ц','f':'Ա','g':'ք','h':'ո','i':'Տ','j':'ʒ','l':'Ʒ','m':'Ֆ','n':'Լ','o':'ʤ','p':'ի','r':'ին','s':'ւն','t':'u','u':'ב','v':'ϸ','w':'ⵡ','x':'Ɐ','y':'ⵢ','A':'ⴲ','B':'ⴸ','D':'ⵄ','E':'ⵁ','F':'ⴼ','G':'ⴶ','H':'ⵈ','I':'ⵉ','J':'ⵊ','L':'ⵍ','M':'ⵎ','N':'ⵏ','O':'ⵑ','P':'ⵒ','R':'ⵔ','S':'ⵚ','T':'ⴲ','U':'ⵓ','V':'ⴸ','W':'ⵡ','X':'☓','Y':'ⵢ'};
         function initializeSampleVocabulary(){translations={"roven":"book","doma":"house","liran":"tall","selu":"blue","elut":"to read","kana":"to see","shira":"sky","minu":"water","jafa":"peace","rikan":"storm","sa":"I","tu":"you","le":"he/she","san":"we","len":"they","en":"it","na":"the","no":"not","ur":"will","rovenin":"books","domaeth":"houses","rikanin":"storms","aleth":"song","miran":"gold","shelara":"echo","vethil":"mist","kelen":"wisdom","thara":"light","nalu":"dream","firen":"fire","astral":"star","lumeth":"moon"}}
