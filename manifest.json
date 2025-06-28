@@ -1,6 +1,7 @@
 {
   "name": "Rapuneth Translator",
   "short_name": "Rapuneth",
+  "description": "Translate between English and the mystical Rapuneth language.",
   "start_url": "/rapuneth-translator/index.html",
   "display": "standalone",
   "background_color": "#1a1a1a",
@@ -16,5 +17,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "lang": "en"
 }
